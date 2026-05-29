@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://ccsssi0elew82"]
+
+[ext_resource type="PackedScene" uid="uid://chun2anarvixg" path="res://scenes/player/player.tscn" id="1_m802k"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_j28rk"]
+
+[node name="Level01" type="Node2D" unique_id=1057582719]
+
+[node name="Player" parent="." unique_id=379882604 instance=ExtResource("1_m802k")]
+position = Vector2(179, 116)
+
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1249847739]
+position = Vector2(160, 150)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=154317836]
+shape = SubResource("WorldBoundaryShape2D_j28rk")
