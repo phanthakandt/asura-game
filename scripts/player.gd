@@ -5,6 +5,9 @@ const SPEED_RUN = 100.0
 const SPEED_WALK = 20.0
 const JUMP_FORCE = -300.0
 const GRAVITY = 800.0
+const DEFLECT_WINDOW = 0.15   # วินาทีที่กด deflect แล้วติด
+var deflect_timer    : float = 0.0
+var can_deflect      : bool  = false
 
 # --- samadhi (สมาธิ) ---
 const SAMADHI_FILL_RATE = 80.0   # per second ขณะ walk
@@ -30,6 +33,7 @@ func _physics_process(delta: float) -> void:
 	_handle_samadhi(delta)
 	_handle_movement()
 	_handle_attack(delta)
+	_handle_deflect(delta)
 	move_and_slide()
 
 func _handle_gravity(delta: float) -> void:
@@ -79,6 +83,7 @@ func _handle_attack(delta: float) -> void:
 		is_attacking = true
 		attack_timer = ATTACK_DURATION
 		hitbox.monitoring = true
+		hitbox.monitorable = true
 		
 		var facing := -1.0 if sprite.flip_h else 1.0
 		hitbox.position.x = abs(hitbox.position.x) * facing
@@ -89,3 +94,30 @@ func _handle_attack(delta: float) -> void:
 		if attack_timer <= 0.0:
 			is_attacking = false
 			hitbox.monitoring = false
+			hitbox.monitorable = false
+			print("เลิกฟัน")
+
+func _handle_deflect(delta: float) -> void:
+	if Input.is_action_just_pressed("deflect"):
+		can_deflect  = true
+		deflect_timer = DEFLECT_WINDOW
+		print("deflect ready!")
+
+	if can_deflect:
+		deflect_timer -= delta
+		if deflect_timer <= 0.0:
+			can_deflect = false
+
+func try_deflect(enemy: CharacterBody2D) -> void:
+	if not can_deflect:
+		return
+	can_deflect = false
+
+	# ถ้า focused = posture เต็มทันที + lock ต่ออีก 5 วิ
+	if is_focused and samadhi_locked:
+		enemy.receive_deflect(true)
+		# ต่อ lock time อีก 5 วิ
+		samadhi_timer = SAMADHI_LOCK_TIME
+		print("FOCUSED — lock ต่ออีก 5 วิ")
+	else:
+		enemy.receive_deflect(false)

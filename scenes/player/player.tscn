@@ -7,7 +7,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8afob"]
 size = Vector2(11, 20)
 
-[node name="Player" type="CharacterBody2D" unique_id=379882604]
+[node name="Player" type="CharacterBody2D" unique_id=379882604 groups=["player"]]
 script = ExtResource("1_8afob")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=391645044]
@@ -20,6 +20,7 @@ shape = SubResource("CapsuleShape2D_x7p2l")
 [node name="HitboxAttack" type="Area2D" parent="." unique_id=846756877]
 position = Vector2(14, 0)
 monitoring = false
+monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxAttack" unique_id=1648345726]
 shape = SubResource("RectangleShape2D_8afob")

@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://d31k4onrco7j1"]
+
+[ext_resource type="Script" uid="uid://6kah5gyxxxy" path="res://scripts/enemy.gd" id="1_6xk8f"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykcao"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6xk8f"]
+size = Vector2(16, 25)
+
+[node name="Enemy" type="CharacterBody2D" unique_id=42011328]
+script = ExtResource("1_6xk8f")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=953586330]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=38124455]
+shape = SubResource("CapsuleShape2D_ykcao")
+debug_color = Color(0.6100649, 0.5394321, 0, 0.41960785)
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1841884503]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=606740734]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_6xk8f")
+debug_color = Color(0.8480546, 0.2807254, 0.45297378, 0.41960785)

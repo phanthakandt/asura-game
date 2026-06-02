@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ccsssi0elew82"]
 
 [ext_resource type="PackedScene" uid="uid://chun2anarvixg" path="res://scenes/player/player.tscn" id="1_m802k"]
+[ext_resource type="PackedScene" uid="uid://d31k4onrco7j1" path="res://scenes/enemies/enemy.tscn" id="2_i2aat"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_j28rk"]
 
@@ -14,3 +15,9 @@ position = Vector2(160, 150)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=154317836]
 shape = SubResource("WorldBoundaryShape2D_j28rk")
+
+[node name="Enemy" parent="." unique_id=42011328 instance=ExtResource("2_i2aat")]
+position = Vector2(119, 122)
+
+[node name="Enemy2" parent="." unique_id=348006597 instance=ExtResource("2_i2aat")]
+position = Vector2(234, 123)
