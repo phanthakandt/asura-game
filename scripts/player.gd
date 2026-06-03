@@ -6,8 +6,8 @@ const SPEED_WALK = 20.0
 const JUMP_FORCE = -300.0
 const GRAVITY = 800.0
 const DEFLECT_WINDOW = 0.15   # วินาทีที่กด deflect แล้วติด
-var deflect_timer    : float = 0.0
-var can_deflect      : bool  = false
+var deflect_timer : float = 0.0
+var can_deflect : bool  = false
 
 # --- samadhi (สมาธิ) ---
 const SAMADHI_FILL_RATE = 80.0   # per second ขณะ walk
@@ -17,16 +17,23 @@ const SAMADHI_LOCK_TIME = 5.0   # วินาทีที่ lock หลัง�
 var samadhi : float = 0.0   # 0–100
 var samadhi_locked : bool  = false
 var samadhi_timer : float = 0.0
-
-# --- combat multipliers (อ่านจาก script อื่นด้วย) ---
 var is_focused : bool = false   # true = Focused state ใช้งานอยู่
 
 var is_attacking : bool = false
 var attack_timer : float = 0.0
 const ATTACK_DURATION = 0.2   # วินาทีที่ hitbox เปิดอยู่
 
+var enemies_in_hitbox : Array = []
+
 @onready var hitbox = $HitboxAttack
+@onready var hurtbox = $Hurtbox
 @onready var sprite = $Sprite2D
+
+func _ready() -> void:
+	hitbox.monitoring  = false
+	hitbox.monitorable = false
+	hurtbox.area_entered.connect(_on_enemy_hitbox_entered)
+	hurtbox.area_exited.connect(_on_enemy_hitbox_exited)
 
 func _physics_process(delta: float) -> void:
 	_handle_gravity(delta)
@@ -101,7 +108,10 @@ func _handle_deflect(delta: float) -> void:
 	if Input.is_action_just_pressed("deflect"):
 		can_deflect  = true
 		deflect_timer = DEFLECT_WINDOW
-		print("deflect ready!")
+		
+		var facing := -1.0 if sprite.flip_h else 1.0
+		hitbox.position.x = abs(hitbox.position.x) * facing
+		print("parry!")
 
 	if can_deflect:
 		deflect_timer -= delta
@@ -121,3 +131,10 @@ func try_deflect(enemy: CharacterBody2D) -> void:
 		print("FOCUSED — lock ต่ออีก 5 วิ")
 	else:
 		enemy.receive_deflect(false)
+
+func _on_enemy_hitbox_entered(area: Area2D) -> void:
+	if area.name == "HitboxAttack" and area.get_parent().is_in_group("enemy"):
+		enemies_in_hitbox.append(area)
+
+func _on_enemy_hitbox_exited(area: Area2D) -> void:
+	enemies_in_hitbox.erase(area)
