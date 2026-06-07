@@ -12,6 +12,8 @@ position = Vector2(179, 116)
 
 [node name="Ground" type="StaticBody2D" parent="." unique_id=1249847739]
 position = Vector2(160, 150)
+collision_layer = 32
+collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=154317836]
 shape = SubResource("WorldBoundaryShape2D_j28rk")

@@ -32,8 +32,7 @@ var enemies_in_hitbox : Array = []
 func _ready() -> void:
 	hitbox.monitoring  = false
 	hitbox.monitorable = false
-	hurtbox.area_entered.connect(_on_enemy_hitbox_entered)
-	hurtbox.area_exited.connect(_on_enemy_hitbox_exited)
+	hurtbox.area_entered.connect(_on_hurtbox_hit)
 
 func _physics_process(delta: float) -> void:
 	_handle_gravity(delta)
@@ -118,23 +117,25 @@ func _handle_deflect(delta: float) -> void:
 		if deflect_timer <= 0.0:
 			can_deflect = false
 
-func try_deflect(enemy: CharacterBody2D) -> void:
-	if not can_deflect:
+# ← จุดหลัก: enemy hitbox ชน hurtbox player
+func _on_hurtbox_hit(area: Area2D) -> void:
+	var enemy = area.get_parent()
+	if not enemy.is_in_group("enemy"):
 		return
-	can_deflect = false
 
-	# ถ้า focused = posture เต็มทันที + lock ต่ออีก 5 วิ
+	if can_deflect:
+		# เช็คว่าอยู่ใน parry window ของ enemy ไหม
+		var is_perfect = enemy.in_parry_window
+		try_deflect(enemy, is_perfect)
+	else:
+		# โดนตีจริง — ใส่ take_damage ตรงนี้ในอนาคต
+		print("โดนตี!")
+
+func try_deflect(enemy: CharacterBody2D, is_perfect: bool) -> void:
+	can_deflect = false
 	if is_focused and samadhi_locked:
 		enemy.receive_deflect(true)
-		# ต่อ lock time อีก 5 วิ
 		samadhi_timer = SAMADHI_LOCK_TIME
-		print("FOCUSED — lock ต่ออีก 5 วิ")
+		print("FOCUSED DEFLECT!")
 	else:
-		enemy.receive_deflect(false)
-
-func _on_enemy_hitbox_entered(area: Area2D) -> void:
-	if area.name == "HitboxAttack" and area.get_parent().is_in_group("enemy"):
-		enemies_in_hitbox.append(area)
-
-func _on_enemy_hitbox_exited(area: Area2D) -> void:
-	enemies_in_hitbox.erase(area)
+		enemy.receive_deflect(is_perfect)

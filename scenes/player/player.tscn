@@ -5,11 +5,12 @@
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x7p2l"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8afob"]
-size = Vector2(18, 28)
+size = Vector2(20, 28)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8afob"]
 
 [node name="Player" type="CharacterBody2D" unique_id=379882604 groups=["player"]]
+collision_mask = 42
 script = ExtResource("1_8afob")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=391645044]
@@ -21,17 +22,20 @@ shape = SubResource("CapsuleShape2D_x7p2l")
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=539105671]
 
 [node name="HitboxAttack" type="Area2D" parent="." unique_id=846756877]
-position = Vector2(14, -15)
+position = Vector2(17, -15)
+collision_layer = 4
+collision_mask = 2
 monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxAttack" unique_id=1648345726]
-position = Vector2(6, 0)
 shape = SubResource("RectangleShape2D_8afob")
 debug_color = Color(0.8214412, 0.1884551, 0.3315316, 0.41960785)
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=942893005]
 position = Vector2(0, -15)
+collision_layer = 0
+collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=1016543526]
 shape = SubResource("CapsuleShape2D_8afob")

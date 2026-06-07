@@ -12,10 +12,15 @@ var is_stunned: bool  = false   # ← state ใหม่
 
 # --- attack ---
 const ATTACK_COOLDOWN = 2.0    # วินาทีระหว่างการตีแต่ละครั้ง
-const ATTACK_DURATION = 0.3    # วินาทีที่ hitbox เปิดอยู่
-var attack_timer: float = 1.0   # เริ่มต้นด้วย delay ก่อนตีครั้งแรก
+const ATTACK_DURATION = 0.5      # ยืดนิดนึงให้ parry มีเวลา
+const PARRY_WINDOW_START = 0.1   # วิที่เริ่ม parry ได้
+const PARRY_WINDOW_END = 0.3     # วิที่ parry ได้ถึง
+
+var attack_timer: float = 1.0
 var attack_active_timer: float = 0.0
-var is_attacking: bool  = false
+var attack_elapsed: float = 0.0  # นับเวลาตั้งแต่เริ่ม attack
+var is_attacking: bool = false
+var in_parry_window: bool = false  # ← ใหม่
 
 @onready var hurtbox = $Hurtbox
 @onready var hitbox = $HitboxAttack   # ← ต้องเพิ่มใน scene
@@ -46,6 +51,8 @@ func _handle_attack(delta: float) -> void:
 
 	if is_attacking:
 		attack_active_timer -= delta
+		attack_elapsed += delta
+		in_parry_window = attack_elapsed >= PARRY_WINDOW_START and attack_elapsed <= PARRY_WINDOW_END
 		if attack_active_timer <= 0.0:
 			_end_attack()
 	else:
@@ -56,6 +63,7 @@ func _handle_attack(delta: float) -> void:
 func _start_attack() -> void:
 	is_attacking = true
 	attack_active_timer = ATTACK_DURATION
+	attack_elapsed = 0.0
 	hitbox.monitoring  = true
 	hitbox.monitorable = true
 	print("ศัตรูตี!")
@@ -63,11 +71,12 @@ func _start_attack() -> void:
 func _end_attack() -> void:
 	is_attacking = false
 	attack_timer = ATTACK_COOLDOWN
+	in_parry_window = false
 	hitbox.monitoring  = false
 	hitbox.monitorable = false
 
 func _on_hit(area: Area2D) -> void:
-	if is_dead or area.name != "HitboxAttack":
+	if is_dead or not area.get_parent().is_in_group("player"):
 		return
 	
 	if is_stunned:
