@@ -74,8 +74,8 @@ func _handle_samadhi(delta: float) -> void:
 			print('ชาร์จ ', samadhi , " | fps: ", Engine.get_frames_per_second())
 			if samadhi >= 100.0:
 				_trigger_focus_lock()
-			else:
-				samadhi = max(samadhi - SAMADHI_DRAIN_RATE * delta, 0.0)
+		else:
+			samadhi = max(samadhi - SAMADHI_DRAIN_RATE * delta, 0.0)
 		is_focused = samadhi >= 100.0
 
 func _trigger_focus_lock() -> void:
