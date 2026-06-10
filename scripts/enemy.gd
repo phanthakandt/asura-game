@@ -24,8 +24,10 @@ var in_parry_window: bool = false  # ← ใหม่
 
 @onready var hurtbox = $Hurtbox
 @onready var hitbox = $HitboxAttack   # ← ต้องเพิ่มใน scene
+@onready var animation = $AnimationPlayer
 
 func _ready() -> void:
+	animation.play("idle")
 	# รับสัญญาณเมื่อ player hitbox ชน hurtbox
 	hurtbox.area_entered.connect(_on_hit)
 	hitbox.monitoring  = false
@@ -61,6 +63,7 @@ func _handle_attack(delta: float) -> void:
 			_start_attack()
 
 func _start_attack() -> void:
+	animation.play("slash")
 	is_attacking = true
 	attack_active_timer = ATTACK_DURATION
 	attack_elapsed = 0.0

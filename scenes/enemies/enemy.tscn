@@ -1,13 +1,75 @@
 [gd_scene format=3 uid="uid://d31k4onrco7j1"]
 
 [ext_resource type="Script" uid="uid://6kah5gyxxxy" path="res://scripts/enemy.gd" id="1_6xk8f"]
+[ext_resource type="Texture2D" uid="uid://20odl6degvp5" path="res://assets/sprites/samuri-slash-1.png" id="2_8e3ao"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ykcao"]
+radius = 3.0
+height = 20.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6xk8f"]
-size = Vector2(16, 29)
+size = Vector2(20, 50)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6xk8f"]
+height = 46.0
+
+[sub_resource type="Animation" id="Animation_8e3ao"]
+length = 0.001
+step = 0.055555556
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_38ino"]
+resource_name = "idle"
+loop_mode = 1
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="Animation" id="Animation_fcftc"]
+resource_name = "slash"
+length = 1.5
+loop_mode = 1
+step = 0.0937
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.0937, 0.1874, 0.2811, 0.3748, 0.4685, 0.5622, 0.6559, 0.7496, 0.8433, 0.937, 1.0307, 1.1244, 1.2181, 1.3118),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lu5c6"]
+_data = {
+&"RESET": SubResource("Animation_8e3ao"),
+&"idle": SubResource("Animation_38ino"),
+&"slash": SubResource("Animation_fcftc")
+}
 
 [node name="Enemy" type="CharacterBody2D" unique_id=42011328 groups=["enemy"]]
 collision_layer = 2
@@ -15,9 +77,13 @@ collision_mask = 37
 script = ExtResource("1_6xk8f")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=953586330]
+texture = ExtResource("2_8e3ao")
+offset = Vector2(0, -32)
+hframes = 16
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=38124455]
-position = Vector2(0, -15)
+position = Vector2(-3, -3)
+rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_ykcao")
 debug_color = Color(0.6100649, 0.5394321, 0, 0.41960785)
 
@@ -27,7 +93,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxAttack" unique_id=1429938404]
-position = Vector2(16, -15.5)
+position = Vector2(18, -26)
 shape = SubResource("RectangleShape2D_6xk8f")
 debug_color = Color(0.52855283, 0.5720146, 1.347661e-06, 0.41960785)
 
@@ -37,5 +103,9 @@ collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=606740734]
+position = Vector2(0, -8)
 shape = SubResource("CapsuleShape2D_6xk8f")
 debug_color = Color(0.8480546, 0.2807254, 0.45297378, 0.41960785)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=743187549]
+libraries/ = SubResource("AnimationLibrary_lu5c6")
