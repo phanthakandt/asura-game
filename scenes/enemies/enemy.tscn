@@ -109,3 +109,36 @@ debug_color = Color(0.8480546, 0.2807254, 0.45297378, 0.41960785)
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=743187549]
 libraries/ = SubResource("AnimationLibrary_lu5c6")
+
+[node name="StatusBars" type="Node2D" parent="." unique_id=1917742472]
+position = Vector2(0, -72)
+
+[node name="HealthBg" type="ColorRect" parent="StatusBars" unique_id=1793278920]
+offset_left = -14.0
+offset_right = 14.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.13, 0.13, 0.13, 0.9)
+
+[node name="HealthFill" type="ColorRect" parent="StatusBars" unique_id=1798568004]
+offset_left = -14.0
+offset_right = 14.0
+offset_bottom = 2.0
+mouse_filter = 2
+color = Color(0.85, 0.1, 0.1, 1)
+
+[node name="PostureBg" type="ColorRect" parent="StatusBars" unique_id=857187038]
+offset_left = -14.0
+offset_top = 4.0
+offset_right = 14.0
+offset_bottom = 6.0
+mouse_filter = 2
+color = Color(0.13, 0.13, 0.13, 0.9)
+
+[node name="PostureFill" type="ColorRect" parent="StatusBars" unique_id=1178980377]
+offset_left = -14.0
+offset_top = 4.0
+offset_right = -14.0
+offset_bottom = 6.0
+mouse_filter = 2
+color = Color(0.95, 0.85, 0.2, 1)

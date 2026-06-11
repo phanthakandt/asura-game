@@ -5,7 +5,7 @@ const SPEED_RUN = 100.0
 const SPEED_WALK = 20.0
 const JUMP_FORCE = -300.0
 const GRAVITY = 800.0
-const DEFLECT_WINDOW = 0.15   # วินาทีที่กด deflect แล้วติด
+const DEFLECT_WINDOW = 0.3   # วินาทีที่กด deflect แล้วติด
 var deflect_timer : float = 0.0
 var can_deflect : bool  = false
 

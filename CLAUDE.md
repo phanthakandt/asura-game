@@ -38,11 +38,13 @@ Attack hitbox (`$HitboxAttack`) is only `monitoring = true` for 0.2s during an a
 
 ### Enemy (`scripts/enemy.gd`)
 
-**Posture system**: Tracks a 0–100 meter. Each player hit adds 25 posture (+ 15 HP damage). A successful deflect adds 30 posture (or fills to 100 if focused). Reaching 100 triggers `_enter_stun()`.
+**Posture system**: Tracks a 0–100 meter. Each player hit adds 5 posture (+ 15 HP damage). A successful deflect adds 30 posture (or fills to 100 if focused). Reaching 100 triggers `_enter_stun()`.
 
 **Stun state**: `is_stunned = true` halts all enemy logic in `_physics_process`. A player attack while enemy is stunned triggers `die()` immediately (deathblow). Posture ≥ 100 also stops the enemy from initiating new attacks.
 
-**Parry window**: The enemy's attack spans 0.5s. `in_parry_window` is only `true` between 0.1s–0.3s into the attack, which is the window the player must deflect within for a "perfect" parry.
+**Parry window (frame-based)**: The "slash" animation drives `Sprite2D.frame` through 0–14 over `ATTACK_DURATION = 1.4s`. `in_parry_window` is `true` only when the current frame falls in `PARRY_FRAMES_1` (2–4) or `PARRY_FRAMES_2` (10–12) — the two sword-swing beats. `$HitboxAttack`'s `monitoring`/`monitorable` are toggled on only during these frame windows, so `area_entered` (edge-triggered) fires within a parry window rather than once at attack start. `_end_attack()` must use `set_deferred()` for these flags since it can run from inside an `area_entered` callback (physics queries are locked at that point).
+
+**Status bars**: `StatusBars` node (above the enemy's head) holds `HealthFill`/`PostureFill` `ColorRect`s. `_update_health_bar()`/`_update_posture_bar()` resize `.size.x` proportionally (`BAR_WIDTH = 28.0`) and are called whenever `hp` or `posture` changes.
 
 ### Physics Layers
 
