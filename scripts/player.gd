@@ -88,7 +88,6 @@ func _handle_samadhi(delta: float) -> void:
 				_trigger_focus_lock()
 		else:
 			samadhi = max(samadhi - SAMADHI_DRAIN_RATE * delta, 0.0)
-			is_focused = samadhi >= 100.0
 
 func _trigger_focus_lock() -> void:
 	samadhi_locked = true
@@ -101,8 +100,6 @@ func _handle_attack(_delta: float) -> void:
 		is_attacking = true
 		hitbox.monitoring = true
 		hitbox.monitorable = true
-		var facing := -1.0 if sprite.flip_h else 1.0
-		hitbox.position.x = abs(hitbox.position.x) * facing
 		var slash_anim = "slash_1" if randf() < 0.5 else "slash_2"
 		animation.play(slash_anim)
 

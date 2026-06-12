@@ -34,7 +34,9 @@ Two interdependent systems:
 
 **Deflect window**: Pressing X opens a 0.3s window (`can_deflect = true`). If an enemy hitbox hits the player's hurtbox during this window, `try_deflect()` is called. During focus lock, a deflect calls `enemy.receive_deflect(true)` (fills posture instantly); otherwise `receive_deflect(is_perfect)` where `is_perfect` depends on whether `enemy.in_parry_window` is true.
 
-Attack hitbox (`$HitboxAttack`) is only `monitoring = true` for 0.2s during an attack. The hitbox X position is mirrored based on `sprite.flip_h` to face the correct direction.
+**Attack hitbox**: `_handle_attack()` sets `$HitboxAttack`'s `monitoring`/`monitorable = true` and plays a random `slash_1`/`slash_2` animation; `_on_animation_finished()` turns them back off via `set_deferred()` once that animation completes (animation-driven, like the enemy's hitbox lifecycle).
+
+**Hitbox facing (realtime)**: `$HitboxAttack`'s `CollisionShape2D` child (`hitbox_shape`) is offset in local X by `HITBOX_SHAPE_OFFSET_X * facing` via `_update_hitbox_facing()`, called from `_ready()` and whenever movement direction changes — the same pattern as the enemy's hitbox. This keeps the hitbox aligned with `sprite.flip_h` continuously, rather than only repositioning it when an attack/deflect starts.
 
 ### Enemy (`scripts/enemy.gd`)
 
