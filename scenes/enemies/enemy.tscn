@@ -93,7 +93,7 @@ monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxAttack" unique_id=1429938404]
-position = Vector2(18, -26)
+position = Vector2(0, -26)
 shape = SubResource("RectangleShape2D_6xk8f")
 debug_color = Color(0.52855283, 0.5720146, 1.347661e-06, 0.41960785)
 

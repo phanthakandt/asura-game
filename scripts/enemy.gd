@@ -3,6 +3,7 @@ extends CharacterBody2D
 # --- stats ---
 const MAX_HP = 100
 const GRAVITY = 800.0
+@export var fliph: bool = true
 
 var hp: int   = MAX_HP
 var max_posture: float = 100.0
@@ -20,18 +21,23 @@ var attack_timer: float = 1.0
 var attack_active_timer: float = 0.0
 var is_attacking: bool = false
 var in_parry_window: bool = false  # ← ใหม่
+const HITBOX_OFFSET_X = 0.0  # Keep hitbox origin centered; shape handles sword reach
 
 @onready var hurtbox = $Hurtbox
 @onready var hitbox = $HitboxAttack   # ← ต้องเพิ่มใน scene
+@onready var hitbox_shape = hitbox.get_node("CollisionShape2D")
 @onready var animation = $AnimationPlayer
 @onready var sprite = $Sprite2D
 @onready var health_fill = $StatusBars/HealthFill
 @onready var posture_fill = $StatusBars/PostureFill
 
 const BAR_WIDTH = 28.0
+const HITBOX_SHAPE_OFFSET_X = 18.0  # Local shape offset when facing right
 
 func _ready() -> void:
-	animation.play("idle")
+	sprite.flip_h = fliph
+	
+	idle()
 	# รับสัญญาณเมื่อ player hitbox ชน hurtbox
 	hurtbox.area_entered.connect(_on_hit)
 	hitbox.monitoring  = false
@@ -56,6 +62,10 @@ func _handle_attack(delta: float) -> void:
 		if is_attacking:
 			_end_attack()
 		return
+
+	var facing := -1.0 if sprite.flip_h else 1.0
+	hitbox.position = Vector2.ZERO
+	hitbox_shape.position.x = HITBOX_SHAPE_OFFSET_X * facing
 
 	if is_attacking:
 		attack_active_timer -= delta
@@ -88,7 +98,7 @@ func _end_attack() -> void:
 	# ใช้ set_deferred เพราะอาจถูกเรียกระหว่าง area_entered signal กำลัง flush อยู่
 	hitbox.set_deferred("monitoring", false)
 	hitbox.set_deferred("monitorable", false)
-	animation.play("idle")
+	idle()
 
 func _on_hit(area: Area2D) -> void:
 	if is_dead or not area.get_parent().is_in_group("player"):
@@ -149,3 +159,6 @@ func _update_health_bar() -> void:
 
 func _update_posture_bar() -> void:
 	posture_fill.size.x = BAR_WIDTH * (min(posture, max_posture) / max_posture)
+
+func idle() -> void:
+	animation.play("idle")

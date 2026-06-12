@@ -44,6 +44,8 @@ Attack hitbox (`$HitboxAttack`) is only `monitoring = true` for 0.2s during an a
 
 **Parry window (frame-based)**: The "slash" animation drives `Sprite2D.frame` through 0–14 over `ATTACK_DURATION = 1.4s`. `in_parry_window` is `true` only when the current frame falls in `PARRY_FRAMES_1` (2–4) or `PARRY_FRAMES_2` (10–12) — the two sword-swing beats. `$HitboxAttack`'s `monitoring`/`monitorable` are toggled on only during these frame windows, so `area_entered` (edge-triggered) fires within a parry window rather than once at attack start. `_end_attack()` must use `set_deferred()` for these flags since it can run from inside an `area_entered` callback (physics queries are locked at that point).
 
+**Enemy slash hitbox**: `HitboxAttack` is centered on the enemy and the `CollisionShape2D` child is offset in local X using `HITBOX_SHAPE_OFFSET_X * facing`. This makes the sword hitbox flip correctly with `sprite.flip_h` and align to the enemy's sword swing direction.
+
 **Status bars**: `StatusBars` node (above the enemy's head) holds `HealthFill`/`PostureFill` `ColorRect`s. `_update_health_bar()`/`_update_posture_bar()` resize `.size.x` proportionally (`BAR_WIDTH = 28.0`) and are called whenever `hp` or `posture` changes.
 
 ### Physics Layers

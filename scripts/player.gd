@@ -28,11 +28,13 @@ var enemies_in_hitbox : Array = []
 @onready var hitbox = $HitboxAttack
 @onready var hurtbox = $Hurtbox
 @onready var sprite = $Sprite2D
+@onready var animation = $AnimationPlayer
 
 func _ready() -> void:
 	hitbox.monitoring  = false
 	hitbox.monitorable = false
 	hurtbox.area_entered.connect(_on_hurtbox_hit)
+	idle()
 
 func _physics_process(delta: float) -> void:
 	_handle_gravity(delta)
@@ -76,7 +78,7 @@ func _handle_samadhi(delta: float) -> void:
 				_trigger_focus_lock()
 		else:
 			samadhi = max(samadhi - SAMADHI_DRAIN_RATE * delta, 0.0)
-		is_focused = samadhi >= 100.0
+			is_focused = samadhi >= 100.0
 
 func _trigger_focus_lock() -> void:
 	samadhi_locked = true
@@ -93,6 +95,10 @@ func _handle_attack(delta: float) -> void:
 		
 		var facing := -1.0 if sprite.flip_h else 1.0
 		hitbox.position.x = abs(hitbox.position.x) * facing
+		
+		# Random slash animation
+		var slash_anim = "slash_1" if randf() < 0.5 else "slash_2"
+		animation.play(slash_anim)
 		print("ฟัน!")
 
 	if is_attacking:
@@ -139,3 +145,6 @@ func try_deflect(enemy: CharacterBody2D, is_perfect: bool) -> void:
 		print("FOCUSED DEFLECT!")
 	else:
 		enemy.receive_deflect(is_perfect)
+
+func idle() -> void:
+	animation.play("idle")
