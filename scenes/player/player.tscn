@@ -61,20 +61,6 @@ tracks/0/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6]
 }
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.5),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"idle"
-}]
-}
 
 [sub_resource type="Animation" id="Animation_p47bc"]
 resource_name = "slash_2"
@@ -91,20 +77,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [7, 8, 9, 10, 11]
-}
-tracks/1/type = "method"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0.41666666),
-"transitions": PackedFloat32Array(1),
-"values": [{
-"args": [],
-"method": &"idle"
-}]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lvxji"]
@@ -130,14 +102,13 @@ rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_x7p2l")
 
 [node name="HitboxAttack" type="Area2D" parent="." unique_id=846756877]
-position = Vector2(17, -15)
+position = Vector2(0, -22)
 collision_layer = 4
 collision_mask = 2
 monitoring = false
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxAttack" unique_id=1648345726]
-position = Vector2(1, -5)
 shape = SubResource("RectangleShape2D_8afob")
 debug_color = Color(0.8214412, 0.1884551, 0.3315316, 0.41960785)
 

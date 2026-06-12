@@ -20,6 +20,7 @@ shape = SubResource("WorldBoundaryShape2D_j28rk")
 
 [node name="Enemy" parent="." unique_id=42011328 instance=ExtResource("2_i2aat")]
 position = Vector2(119, 122)
+fliph = false
 
 [node name="Enemy2" parent="." unique_id=348006597 instance=ExtResource("2_i2aat")]
 position = Vector2(234, 123)

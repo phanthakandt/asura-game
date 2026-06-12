@@ -29,12 +29,17 @@ var enemies_in_hitbox : Array = []
 @onready var hurtbox = $Hurtbox
 @onready var sprite = $Sprite2D
 @onready var animation = $AnimationPlayer
+@onready var hitbox_shape = hitbox.get_node("CollisionShape2D")
+const HITBOX_SHAPE_OFFSET_X = 18.0  # Local shape offset when facing right
+
 
 func _ready() -> void:
 	hitbox.monitoring  = false
 	hitbox.monitorable = false
 	hurtbox.area_entered.connect(_on_hurtbox_hit)
+	animation.animation_finished.connect(_on_animation_finished)
 	idle()
+	_update_hitbox_facing()
 
 func _physics_process(delta: float) -> void:
 	_handle_gravity(delta)
@@ -57,9 +62,14 @@ func _handle_movement() -> void:
 	
 	if dir != 0:
 		sprite.flip_h = dir < 0
-		
+		_update_hitbox_facing()
+
 	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
 		velocity.y = JUMP_FORCE
+
+func _update_hitbox_facing() -> void:
+	var facing := -1.0 if sprite.flip_h else 1.0
+	hitbox_shape.position.x = HITBOX_SHAPE_OFFSET_X * facing
 
 func _handle_samadhi(delta: float) -> void:
 	var walking := Input.is_action_pressed("walk")
@@ -86,36 +96,20 @@ func _trigger_focus_lock() -> void:
 	is_focused = true
 	print("FOCUSED — samadhi locked for ", SAMADHI_LOCK_TIME, "s")
 
-func _handle_attack(delta: float) -> void:
+func _handle_attack(_delta: float) -> void:
 	if Input.is_action_just_pressed("attack") and not is_attacking:
 		is_attacking = true
-		attack_timer = ATTACK_DURATION
 		hitbox.monitoring = true
 		hitbox.monitorable = true
-		
 		var facing := -1.0 if sprite.flip_h else 1.0
 		hitbox.position.x = abs(hitbox.position.x) * facing
-		
-		# Random slash animation
 		var slash_anim = "slash_1" if randf() < 0.5 else "slash_2"
 		animation.play(slash_anim)
-		print("ฟัน!")
-
-	if is_attacking:
-		attack_timer -= delta
-		if attack_timer <= 0.0:
-			is_attacking = false
-			hitbox.monitoring = false
-			hitbox.monitorable = false
-			print("เลิกฟัน")
 
 func _handle_deflect(delta: float) -> void:
 	if Input.is_action_just_pressed("deflect"):
 		can_deflect  = true
 		deflect_timer = DEFLECT_WINDOW
-		
-		var facing := -1.0 if sprite.flip_h else 1.0
-		hitbox.position.x = abs(hitbox.position.x) * facing
 		print("parry!")
 
 	if can_deflect:
@@ -148,3 +142,10 @@ func try_deflect(enemy: CharacterBody2D, is_perfect: bool) -> void:
 
 func idle() -> void:
 	animation.play("idle")
+
+func _on_animation_finished(anim_name: StringName) -> void:
+	if anim_name in ["slash_1", "slash_2"]:
+		is_attacking = false
+		hitbox.set_deferred("monitoring", false)
+		hitbox.set_deferred("monitorable", false)
+		idle()
