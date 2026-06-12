@@ -32,7 +32,7 @@ Two interdependent systems:
 
 **Samadhi meter** (0–100): Fills at 80/s while Shift is held, drains at 20/s otherwise. Reaching 100 triggers a 5-second "focus lock" (`samadhi_locked = true`, `is_focused = true`). The lock resets samadhi to 0 when it expires.
 
-**Deflect window**: Pressing X opens a 0.15s window (`can_deflect = true`). If an enemy hitbox hits the player's hurtbox during this window, `try_deflect()` is called. During focus lock, a deflect calls `enemy.receive_deflect(true)` (fills posture instantly); otherwise `receive_deflect(is_perfect)` where `is_perfect` depends on whether `enemy.in_parry_window` is true.
+**Deflect window**: Pressing X opens a 0.3s window (`can_deflect = true`). If an enemy hitbox hits the player's hurtbox during this window, `try_deflect()` is called. During focus lock, a deflect calls `enemy.receive_deflect(true)` (fills posture instantly); otherwise `receive_deflect(is_perfect)` where `is_perfect` depends on whether `enemy.in_parry_window` is true.
 
 Attack hitbox (`$HitboxAttack`) is only `monitoring = true` for 0.2s during an attack. The hitbox X position is mirrored based on `sprite.flip_h` to face the correct direction.
 
